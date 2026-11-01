@@ -1,0 +1,85 @@
+@startuml v3-pedido
+title Versión 3: se agrega el tipo PEDIDO (nuevo en verde, modificado en naranja)
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+class Cliente #orange {
+  procesarInformes(reports, fabricas)
+}
+
+abstract class FabricaInformes #orange {
+  {abstract} crearFactura() : Factura
+  {abstract} crearCompra() : Compra
+  {abstract} crearPedido() : Pedido
+}
+
+class FabricaEntrada #orange {
+  crearFactura() : Factura
+  crearCompra() : Compra
+  crearPedido() : Pedido
+}
+
+class FabricaSalida #orange {
+  crearFactura() : Factura
+  crearCompra() : Compra
+  crearPedido() : lanza un error
+}
+
+class FabricaMixta #orange {
+  crearFactura() : Factura
+  crearCompra() : Compra
+  crearPedido() : lanza un error
+}
+
+abstract class Factura {
+  {abstract} procesar(archivo)
+}
+
+abstract class Compra {
+  {abstract} procesar(archivo)
+}
+
+abstract class Pedido #palegreen {
+  {abstract} procesar(archivo)
+}
+
+class FacturaEntrada
+class CompraEntrada
+class PedidoEntrada #palegreen
+class FacturaSalida
+class CompraSalida
+class FacturaMixta
+class CompraMixta
+
+Cliente --> FabricaInformes
+Cliente ..> Factura
+Cliente ..> Compra
+Cliente ..> Pedido
+
+FabricaInformes <|-- FabricaEntrada
+FabricaInformes <|-- FabricaSalida
+FabricaInformes <|-- FabricaMixta
+
+Factura <|-- FacturaEntrada
+Factura <|-- FacturaSalida
+Factura <|-- FacturaMixta
+Compra <|-- CompraEntrada
+Compra <|-- CompraSalida
+Compra <|-- CompraMixta
+Pedido <|-- PedidoEntrada
+
+FabricaEntrada ..> FacturaEntrada : crea
+FabricaEntrada ..> CompraEntrada : crea
+FabricaEntrada ..> PedidoEntrada : crea
+FabricaSalida ..> FacturaSalida : crea
+FabricaSalida ..> CompraSalida : crea
+FabricaMixta ..> FacturaMixta : crea
+FabricaMixta ..> CompraMixta : crea
+
+note right of FabricaInformes
+  Al agregar un tipo de informe nuevo
+  hay que cambiar la fábrica abstracta
+  y todas las fábricas concretas.
+end note
+@enduml

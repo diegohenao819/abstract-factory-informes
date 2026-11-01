@@ -1,0 +1,72 @@
+@startuml v2-mixta
+title Versión 2: se agrega la categoría MIXTA (clases nuevas en verde)
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+class Cliente {
+  procesarInformes(reports, fabricas)
+}
+
+abstract class FabricaInformes {
+  {abstract} crearFactura() : Factura
+  {abstract} crearCompra() : Compra
+}
+
+class FabricaEntrada {
+  crearFactura() : Factura
+  crearCompra() : Compra
+}
+
+class FabricaSalida {
+  crearFactura() : Factura
+  crearCompra() : Compra
+}
+
+class FabricaMixta #palegreen {
+  crearFactura() : Factura
+  crearCompra() : Compra
+}
+
+abstract class Factura {
+  {abstract} procesar(archivo)
+}
+
+abstract class Compra {
+  {abstract} procesar(archivo)
+}
+
+class FacturaEntrada
+class CompraEntrada
+class FacturaSalida
+class CompraSalida
+class FacturaMixta #palegreen
+class CompraMixta #palegreen
+
+Cliente --> FabricaInformes
+Cliente ..> Factura
+Cliente ..> Compra
+
+FabricaInformes <|-- FabricaEntrada
+FabricaInformes <|-- FabricaSalida
+FabricaInformes <|-- FabricaMixta
+
+Factura <|-- FacturaEntrada
+Factura <|-- FacturaSalida
+Factura <|-- FacturaMixta
+Compra <|-- CompraEntrada
+Compra <|-- CompraSalida
+Compra <|-- CompraMixta
+
+FabricaEntrada ..> FacturaEntrada : crea
+FabricaEntrada ..> CompraEntrada : crea
+FabricaSalida ..> FacturaSalida : crea
+FabricaSalida ..> CompraSalida : crea
+FabricaMixta ..> FacturaMixta : crea
+FabricaMixta ..> CompraMixta : crea
+
+note bottom of FabricaMixta
+  Solo se agregan clases nuevas.
+  Las clases que ya existían no cambian.
+end note
+@enduml

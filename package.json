@@ -1,15 +1,15 @@
 {
   "name": "abstract-factory-informes",
   "version": "1.0.0",
-  "description": "Sistema de procesamiento de informes con el patrón Abstract Factory (Reutilización de Software - UNIR)",
+  "description": "Sistema de procesamiento de informes con el patrón Abstract Factory",
   "private": true,
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "v1": "npm run build && node dist/v1-base/main.js",
-    "v2": "npm run build && node dist/v2-mixta/main.js",
-    "v3": "npm run build && node dist/v3-pedido/main.js",
-    "start": "npm run build && node dist/v1-base/main.js && node dist/v2-mixta/main.js && node dist/v3-pedido/main.js"
+    "v1": "npm run build && node dist/v1_base.js",
+    "v2": "npm run build && node dist/v2_mixta.js",
+    "v3": "npm run build && node dist/v3_pedido.js",
+    "start": "npm run build && node dist/v1_base.js && node dist/v2_mixta.js && node dist/v3_pedido.js"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
