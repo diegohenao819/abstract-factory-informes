@@ -1,9 +1,11 @@
 @startuml v2-mixta
 title Versión 2: se agrega la categoría MIXTA (clases nuevas en verde)
 skinparam classAttributeIconSize 0
-skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 70
 hide empty members
 
+' Fila 1: cliente y fábrica abstracta
 class Cliente {
   procesarInformes(reports, fabricas)
 }
@@ -13,6 +15,7 @@ abstract class FabricaInformes {
   {abstract} crearCompra() : Compra
 }
 
+' Fila 2: una fábrica por categoría
 class FabricaEntrada {
   crearFactura() : Factura
   crearCompra() : Compra
@@ -28,6 +31,23 @@ class FabricaMixta #palegreen {
   crearCompra() : Compra
 }
 
+' Fila 3: los informes de cada familia, debajo de su fábrica
+together {
+  class FacturaEntrada
+  class CompraEntrada
+}
+
+together {
+  class FacturaSalida
+  class CompraSalida
+}
+
+together {
+  class FacturaMixta #palegreen
+  class CompraMixta #palegreen
+}
+
+' Fila 4: productos abstractos
 abstract class Factura {
   {abstract} procesar(archivo)
 }
@@ -36,36 +56,27 @@ abstract class Compra {
   {abstract} procesar(archivo)
 }
 
-class FacturaEntrada
-class CompraEntrada
-class FacturaSalida
-class CompraSalida
-class FacturaMixta #palegreen
-class CompraMixta #palegreen
+Cliente -right-> FabricaInformes : usa
 
-Cliente --> FabricaInformes
-Cliente ..> Factura
-Cliente ..> Compra
+FabricaInformes <|-down- FabricaEntrada
+FabricaInformes <|-down- FabricaSalida
+FabricaInformes <|-down- FabricaMixta
 
-FabricaInformes <|-- FabricaEntrada
-FabricaInformes <|-- FabricaSalida
-FabricaInformes <|-- FabricaMixta
+FabricaEntrada .down.> FacturaEntrada : crea
+FabricaEntrada .down.> CompraEntrada : crea
+FabricaSalida .down.> FacturaSalida : crea
+FabricaSalida .down.> CompraSalida : crea
+FabricaMixta .down.> FacturaMixta : crea
+FabricaMixta .down.> CompraMixta : crea
 
-Factura <|-- FacturaEntrada
-Factura <|-- FacturaSalida
-Factura <|-- FacturaMixta
-Compra <|-- CompraEntrada
-Compra <|-- CompraSalida
-Compra <|-- CompraMixta
+FacturaEntrada -down-|> Factura
+FacturaSalida -down-|> Factura
+FacturaMixta -down-|> Factura
+CompraEntrada -down-|> Compra
+CompraSalida -down-|> Compra
+CompraMixta -down-|> Compra
 
-FabricaEntrada ..> FacturaEntrada : crea
-FabricaEntrada ..> CompraEntrada : crea
-FabricaSalida ..> FacturaSalida : crea
-FabricaSalida ..> CompraSalida : crea
-FabricaMixta ..> FacturaMixta : crea
-FabricaMixta ..> CompraMixta : crea
-
-note bottom of FabricaMixta
+note right of FabricaMixta
   Solo se agregan clases nuevas.
   Las clases que ya existían no cambian.
 end note

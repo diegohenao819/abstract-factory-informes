@@ -1,9 +1,11 @@
 @startuml v1-base
 title Versión 1: categorías ENTRADA y SALIDA
 skinparam classAttributeIconSize 0
-skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 70
 hide empty members
 
+' Fila 1: cliente y fábrica abstracta
 class Cliente {
   procesarInformes(reports, fabricas)
 }
@@ -13,6 +15,7 @@ abstract class FabricaInformes {
   {abstract} crearCompra() : Compra
 }
 
+' Fila 2: una fábrica por categoría
 class FabricaEntrada {
   crearFactura() : Factura
   crearCompra() : Compra
@@ -23,6 +26,18 @@ class FabricaSalida {
   crearCompra() : Compra
 }
 
+' Fila 3: los informes de cada familia, debajo de su fábrica
+together {
+  class FacturaEntrada
+  class CompraEntrada
+}
+
+together {
+  class FacturaSalida
+  class CompraSalida
+}
+
+' Fila 4: productos abstractos
 abstract class Factura {
   {abstract} procesar(archivo)
 }
@@ -31,25 +46,18 @@ abstract class Compra {
   {abstract} procesar(archivo)
 }
 
-class FacturaEntrada
-class CompraEntrada
-class FacturaSalida
-class CompraSalida
+Cliente -right-> FabricaInformes : usa
 
-Cliente --> FabricaInformes
-Cliente ..> Factura
-Cliente ..> Compra
+FabricaInformes <|-down- FabricaEntrada
+FabricaInformes <|-down- FabricaSalida
 
-FabricaInformes <|-- FabricaEntrada
-FabricaInformes <|-- FabricaSalida
+FabricaEntrada .down.> FacturaEntrada : crea
+FabricaEntrada .down.> CompraEntrada : crea
+FabricaSalida .down.> FacturaSalida : crea
+FabricaSalida .down.> CompraSalida : crea
 
-Factura <|-- FacturaEntrada
-Factura <|-- FacturaSalida
-Compra <|-- CompraEntrada
-Compra <|-- CompraSalida
-
-FabricaEntrada ..> FacturaEntrada : crea
-FabricaEntrada ..> CompraEntrada : crea
-FabricaSalida ..> FacturaSalida : crea
-FabricaSalida ..> CompraSalida : crea
+FacturaEntrada -down-|> Factura
+FacturaSalida -down-|> Factura
+CompraEntrada -down-|> Compra
+CompraSalida -down-|> Compra
 @enduml

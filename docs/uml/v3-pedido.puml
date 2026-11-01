@@ -1,9 +1,11 @@
 @startuml v3-pedido
 title Versión 3: se agrega el tipo PEDIDO (nuevo en verde, modificado en naranja)
 skinparam classAttributeIconSize 0
-skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 70
 hide empty members
 
+' Fila 1: cliente y fábrica abstracta
 class Cliente #orange {
   procesarInformes(reports, fabricas)
 }
@@ -14,6 +16,7 @@ abstract class FabricaInformes #orange {
   {abstract} crearPedido() : Pedido
 }
 
+' Fila 2: una fábrica por categoría
 class FabricaEntrada #orange {
   crearFactura() : Factura
   crearCompra() : Compra
@@ -32,6 +35,24 @@ class FabricaMixta #orange {
   crearPedido() : lanza un error
 }
 
+' Fila 3: los informes de cada familia, debajo de su fábrica
+together {
+  class FacturaEntrada
+  class CompraEntrada
+  class PedidoEntrada #palegreen
+}
+
+together {
+  class FacturaSalida
+  class CompraSalida
+}
+
+together {
+  class FacturaMixta
+  class CompraMixta
+}
+
+' Fila 4: productos abstractos
 abstract class Factura {
   {abstract} procesar(archivo)
 }
@@ -44,38 +65,27 @@ abstract class Pedido #palegreen {
   {abstract} procesar(archivo)
 }
 
-class FacturaEntrada
-class CompraEntrada
-class PedidoEntrada #palegreen
-class FacturaSalida
-class CompraSalida
-class FacturaMixta
-class CompraMixta
+Cliente -right-> FabricaInformes : usa
 
-Cliente --> FabricaInformes
-Cliente ..> Factura
-Cliente ..> Compra
-Cliente ..> Pedido
+FabricaInformes <|-down- FabricaEntrada
+FabricaInformes <|-down- FabricaSalida
+FabricaInformes <|-down- FabricaMixta
 
-FabricaInformes <|-- FabricaEntrada
-FabricaInformes <|-- FabricaSalida
-FabricaInformes <|-- FabricaMixta
+FabricaEntrada .down.> FacturaEntrada : crea
+FabricaEntrada .down.> CompraEntrada : crea
+FabricaEntrada .down.> PedidoEntrada : crea
+FabricaSalida .down.> FacturaSalida : crea
+FabricaSalida .down.> CompraSalida : crea
+FabricaMixta .down.> FacturaMixta : crea
+FabricaMixta .down.> CompraMixta : crea
 
-Factura <|-- FacturaEntrada
-Factura <|-- FacturaSalida
-Factura <|-- FacturaMixta
-Compra <|-- CompraEntrada
-Compra <|-- CompraSalida
-Compra <|-- CompraMixta
-Pedido <|-- PedidoEntrada
-
-FabricaEntrada ..> FacturaEntrada : crea
-FabricaEntrada ..> CompraEntrada : crea
-FabricaEntrada ..> PedidoEntrada : crea
-FabricaSalida ..> FacturaSalida : crea
-FabricaSalida ..> CompraSalida : crea
-FabricaMixta ..> FacturaMixta : crea
-FabricaMixta ..> CompraMixta : crea
+FacturaEntrada -down-|> Factura
+FacturaSalida -down-|> Factura
+FacturaMixta -down-|> Factura
+CompraEntrada -down-|> Compra
+CompraSalida -down-|> Compra
+CompraMixta -down-|> Compra
+PedidoEntrada -down-|> Pedido
 
 note right of FabricaInformes
   Al agregar un tipo de informe nuevo
